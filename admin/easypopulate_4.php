@@ -213,20 +213,20 @@ if (($collation == 'utf8') && ((substr($project, 0, 5) == "1.3.8") || (substr($p
 /* @var $epdlanguage_query type array */
 //$epdlanguage_query = $db->Execute("SELECT languages_id, name FROM ".TABLE_LANGUAGES." WHERE code = '".DEFAULT_LANGUAGE."'");
 if (!defined(DEFAULT_LANGUAGE)) {
-  $epdlanguage_query = ep_4_query("SELECT languages_id, code FROM " . TABLE_LANGUAGES . " ORDER BY languages_id LIMIT 1");
-  $epdlanguage = ($ep_uses_mysqli ? mysqli_fetch_array($epdlanguage_query) : mysql_fetch_array($epdlanguage_query));
-  define('DEFAULT_LANGUAGE', $epdlanguage['code']);
+  $epdlanguage_query = "SELECT languages_id, code FROM " . TABLE_LANGUAGES . " ORDER BY languages_id LIMIT 1";
+  $epdlanguage = $db->Execute($epdlanguage_query);
+  define('DEFAULT_LANGUAGE', $epdlanguage->fields['code']);
 }
-$epdlanguage_query = ep_4_query("SELECT languages_id, name FROM " . TABLE_LANGUAGES . " WHERE code = '" . DEFAULT_LANGUAGE . "'");
-if (($ep_uses_mysqli ? mysqli_num_rows($epdlanguage_query) : mysql_num_rows($epdlanguage_query))) {
-  $epdlanguage = ($ep_uses_mysqli ? mysqli_fetch_array($epdlanguage_query) : mysql_fetch_array($epdlanguage_query));
-  $epdlanguage_id = $epdlanguage['languages_id'];
-  $epdlanguage_name = $epdlanguage['name'];
+$epdlanguage_query = "SELECT languages_id, name FROM " . TABLE_LANGUAGES . " WHERE code = '" . DEFAULT_LANGUAGE . "'";
+$epdlanguage = $db->Execute($epdlanguage_query);
+if ($epdlanguage->RecordCount() > 0) {
+  $epdlanguage_id = $epdlanguage->fields['languages_id'];
+  $epdlanguage_name = $epdlanguage->fields['name'];
 } else {
   exit("EP4 FATAL ERROR: No default language set."); // this should never happen
 }
 
-$langcode = ep_4_get_languages(); // array of currently used language codes ( 1, 2, 3, ...)
+$langcode = zen_get_languages(); // array of currently used language codes ( 1, 2, 3, ...)
 $ep_4_SBAEnabled = ep_4_SBA1Exists();
 
 /*
