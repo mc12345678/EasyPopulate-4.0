@@ -417,18 +417,14 @@ if (((isset($error) && !$error) || !isset($error)) && (!is_null($_POST["delete"]
              <?php
              $manufacturers_array = array();
              $manufacturers_array[] = array("id" => '', 'text' => EASYPOPULATE_4_DISPLAY_MANUFACTURERS);
-             if ($ep_uses_mysqli) {
-               $manufacturers_query = mysqli_query($db->link, "SELECT manufacturers_id, manufacturers_name FROM " . TABLE_MANUFACTURERS . " ORDER BY manufacturers_name");
-               while ($manufacturers = mysqli_fetch_array($manufacturers_query)) {
-                 $manufacturers_array[] = array("id" => $manufacturers['manufacturers_id'], 'text' => $manufacturers['manufacturers_name']);
-               }
-			
-             } else {
-               $manufacturers_query = mysql_query("SELECT manufacturers_id, manufacturers_name FROM " . TABLE_MANUFACTURERS . " ORDER BY manufacturers_name");
-               while ($manufacturers = mysql_fetch_array($manufacturers_query)) {
-                 $manufacturers_array[] = array("id" => $manufacturers['manufacturers_id'], 'text' => $manufacturers['manufacturers_name']);
-               }
+
+             $manufacturers_query = "SELECT manufacturers_id, manufacturers_name FROM " . TABLE_MANUFACTURERS . " ORDER BY manufacturers_name";
+             $manufacturers = $db->Execute($manufacturers_query);
+             while (!$manufacturers->EOF) {
+               $manufacturers_array[] = array("id" => $manufacturers->fields['manufacturers_id'], 'text' => $manufacturers->fields['manufacturers_name']);
+               $manufacturers->MoveNext();
              }
+
              $status_array = array(array("id" => '1', 'text' => EASYPOPULATE_4_DD_STATUS_DEFAULT ), array("id" => '1', 'text' => EASYPOPULATE_4_DD_STATUS_ACTIVE), array("id" => '0', 'text' => EASYPOPULATE_4_DD_STATUS_INACTIVE), array("id" => '3', 'text' => EASYPOPULATE_4_DD_STATUS_ALL));
              $export_type_array = array(array("id" => '0', 'text' => EASYPOPULATE_4_DD_DOWNLOAD_DEFAULT),
                array("id" => '0', 'text' => EASYPOPULATE_4_DD_DOWNLOAD_COMPLETE),
