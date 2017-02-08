@@ -28,6 +28,8 @@ $ep_export_count = 0;
 $time_start = microtime(true); // benchmarking
 // build export filters
 
+$sql_filter = '';
+
 // override for $ep_dltype
 if (isset($_POST['ep_export_type'])) {
   if ($_POST['ep_export_type'] == '0') {
@@ -36,7 +38,16 @@ if (isset($_POST['ep_export_type'])) {
     $ep_dltype = 'priceqty'; // Model/Price/Qty
   } elseif ($_POST['ep_export_type'] == '2') {
     $ep_dltype = 'pricebreaks'; // Model/Price/Breaks
+  } elseif ($_POST['ep_export_type'] == '3') {
+//    $ep_dltype = 'fullsingle'; // Complete Products by master_categories_id only (no linked product)
+    $sql_filter .= ' AND p.master_categories_id = ptoc.categories_id'; // Complete Products by master_categories_id only (no linked product)
+    $ep_dltype = 'full';
   }
+}
+
+if ($ep_dltype == 'fullsingle') {
+    $sql_filter .= ' AND p.master_categories_id = ptoc.categories_id'; // Complete Products by master_categories_id only (no linked product)
+    $ep_dltype = 'full';
 }
 
 // override for $ep_dltype
@@ -51,8 +62,6 @@ if ( isset($_POST['ep_order_export_type']) ) {
 		$ep_dltype = 'orders_4'; // Attributes Only
   }
 }
-
-$sql_filter = '';
 
 if (isset($_POST['ep_category_filter'])) {
   if (!empty($_POST['ep_category_filter'])) {
