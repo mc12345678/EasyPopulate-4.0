@@ -467,7 +467,8 @@ if (((isset($error) && !$error) || !isset($error)) && (!is_null($_POST["delete"]
              $export_type_array = array(array("id" => '0', 'text' => EASYPOPULATE_4_DD_DOWNLOAD_DEFAULT),
                array("id" => '0', 'text' => EASYPOPULATE_4_DD_DOWNLOAD_COMPLETE),
                array("id" => '1', 'text' => EASYPOPULATE_4_DD_DOWNLOAD_QUANTITY),
-               array("id" => '2', 'text' => EASYPOPULATE_4_DD_DOWNLOAD_BREAKS));
+               array("id" => '2', 'text' => EASYPOPULATE_4_DD_DOWNLOAD_BREAKS),
+               array("id" => '3', 'text' => EASYPOPULATE_4_DD_DOWNLOAD_COMPLETE_SINGLE));
 
              $category_filter_array = array();
              $category_filter_array = array_merge(array(0 => array("id" => '', 'text' => EASYPOPULATE_4_DD_FILTER_CATEGORIES)), zen_get_category_tree());
@@ -523,6 +524,7 @@ if (((isset($error) && !$error) || !isset($error)) && (!is_null($_POST["delete"]
         <b><?php echo EASYPOPULATE_4_DISPLAY_PRODUCTS_PRICE_EXPORT_OPTION; ?></b><br />
         <!-- Download file links -->
         <a href="<?php echo zen_href_link(FILENAME_EASYPOPULATE_4, 'export=full', $request_type); ?>"><?php echo EASYPOPULATE_4_DISPLAY_COMPLETE_PRODUCTS; ?></a><br/>
+        <a href="<?php echo zen_href_link(FILENAME_EASYPOPULATE_4, 'export=fullsingle', $request_type); ?>"><?php echo EASYPOPULATE_4_DISPLAY_COMPLETE_PRODUCTS_SINGLE; ?></a><br />
         <a href="<?php echo zen_href_link(FILENAME_EASYPOPULATE_4, 'export=priceqty', $request_type); ?>"><?php echo EASYPOPULATE_4_DISPLAY_PRICE_QTY; ?></a><br />
         <a href="<?php echo zen_href_link(FILENAME_EASYPOPULATE_4, 'export=pricebreaks', $request_type); ?>"><?php echo EASYPOPULATE_4_DISPLAY_PRICE_BREAKS; ?></a><br />
         <a href="<?php echo zen_href_link(FILENAME_EASYPOPULATE_4, 'export=featured', $request_type); ?>"><?php echo EASYPOPULATE_4_DISPLAY_FEATURED; ?></a><br />
