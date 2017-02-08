@@ -122,6 +122,7 @@ define('EASYPOPULATE_4_DD_DOWNLOAD_DEFAULT', 'Download Type');
 define('EASYPOPULATE_4_DD_DOWNLOAD_COMPLETE', 'Complete Products');
 define('EASYPOPULATE_4_DD_DOWNLOAD_QUANTITY', 'Model/Price/Qty');
 define('EASYPOPULATE_4_DD_DOWNLOAD_BREAKS', 'Model/Price/Breaks');
+define('EASYPOPULATE_4_DD_DOWNLOAD_COMPLETE_SINGLE', 'Complete Prod No Linked');
 define('EASYPOPULATE_4_DD_FILTER_CATEGORIES', 'Categories');
 define('EASYPOPULATE_4_DD_FILTER_EXPORT', 'Export');
 
