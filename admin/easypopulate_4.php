@@ -83,7 +83,8 @@ $ep_debug_logging_all = false; // do not comment out.. make false instead
 //$sql_fail_test == true; // used to cause an sql error on new product upload - tests error handling & logs
 /* Test area end */
 
-$curver_detail = '4.0.37.6';
+/* populate the variable $curver_detail using independent file to identify the version of this plugin. */
+require DIR_WS_MODULES . 'easypopulate_4_version.php'; //$curver_detail = '4.0.37.6';
 $message = '';
 if (IS_ADMIN_FLAG) {
   $new_version_details = plugin_version_check_for_updates(2069, $curver_detail);
