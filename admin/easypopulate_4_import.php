@@ -399,7 +399,7 @@ if (isset($_POST['import']) && $_POST['import'] != '') {
             $categories_name_exists = false; // assume no column defined
             foreach ($langcode as $lang) {
               // test column headers for each language
-              if (zen_not_null(trim($items[$filelayout['v_categories_name_' . $lang['id']]]))) { // import column found
+              if (zen_not_null($items[$filelayout['v_categories_name_' . $lang['id']]])) { // import column found
                 $categories_name_exists = true;
                 break;
               }
@@ -418,7 +418,7 @@ if (isset($_POST['import']) && $_POST['import'] != '') {
         } else { // Product Exists
           // I don't see why this is necessary
           /*
-            if (!zen_not_null(trim($items[$filelayout['v_categories_name_1']])) && isset($filelayout['v_categories_name_1'])) {
+            if (!zen_not_null($items[$filelayout['v_categories_name_1']]) && isset($filelayout['v_categories_name_1'])) {
             // let's skip this existing product without a master category but has the column heading
             // or should we just update it to result of $row (it's current category..)??
             $display_output .= sprintf(EASYPOPULATE_4_DISPLAY_RESULT_CATEGORY_NOT_FOUND, $items[$filelayout['v_products_model']], '');
@@ -679,14 +679,14 @@ if (isset($_POST['import']) && $_POST['import'] != '') {
         $categories_name_exists = false; // assume no column defined
         foreach ($langcode as $lang) {
           // test column headers for each language
-          if (isset($items[$filelayout['v_categories_name_' . $lang['id']]]) && zen_not_null(trim($items[$filelayout['v_categories_name_' . $lang['id']]]))) { // import column found
+          if (isset($items[$filelayout['v_categories_name_' . $lang['id']]]) && zen_not_null($items[$filelayout['v_categories_name_' . $lang['id']]])) { // import column found
             $categories_name_exists['id'] = true; // at least one language column defined
             break;
           }
         }
         foreach ($langcode as $lang) {
           // test column headers for each language
-          if (isset($items[$filelayout['v_categories_name_' . $lang['code']]]) && zen_not_null(trim($items[$filelayout['v_categories_name_' . $lang['code']]]))) { // import column found
+          if (isset($items[$filelayout['v_categories_name_' . $lang['code']]]) && zen_not_null($items[$filelayout['v_categories_name_' . $lang['code']]])) { // import column found
             $categories_name_exists['code'] = true; // at least one language column defined
             break;
           }
