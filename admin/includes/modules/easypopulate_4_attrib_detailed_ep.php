@@ -35,7 +35,7 @@
           // UPDATE
           $sql = "UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . " SET
           options_values_price              = :options_values_price:, ";
-          if ($ep_supported_mods['dual'] && isset($filelayout['v_options_values_price_w'])) {
+          if ($ep_supported_mods['dual'] && isset($filelayout['v_options_values_price_w'])) {
             $sql .= "options_values_price_w              = :options_values_price_w:, ";
             $sql = $db->bindVars($sql, ':options_values_price_w:', (isset($filelayout['v_options_values_price_w'])) ? $items[$filelayout['v_options_values_price_w']] : $row['options_values_price_w'], 'currency');
           }
