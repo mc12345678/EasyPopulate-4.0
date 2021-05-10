@@ -260,6 +260,8 @@ if (!function_exists('zen_get_sub_categories')) {
     unset($ep_uses_mysqli);
     unset($sub_categories_query);
     unset($sub_categories);
+
+    return;
   }
 }
 
