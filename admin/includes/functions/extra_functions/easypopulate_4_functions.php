@@ -978,6 +978,7 @@ function ep4_directory_choice_check($ep_debug_log_path) {
   ep4_non_admin_temp();
   $ep_debug_log_path = $db->Execute('SELECT configuration_value FROM ' . TABLE_CONFIGURATION . ' WHERE configuration_key = \'EP4_ADMIN_TEMP_DIRECTORY\'', '1', false, 0, true);
 
+  // Intended to be a string value that returns for database value storage
   return ($ep_debug_log_path->fields['configuration_value'] == 'true' ? 'true' : 'false');
 }
 // The following functions are for testing purposes only
