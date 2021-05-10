@@ -64,11 +64,10 @@
             }
             if (($v_today >= strtotime($v_featured_date_available)) && ($v_today < strtotime($v_expires_date)) || ($v_today >= strtotime($v_featured_date_available) && $v_featured_date_available != '0001-01-01' && $v_expires_date == '0001-01-01') || ($v_featured_date_available == '0001-01-01' && $v_expires_date == '0001-01-01' && (defined('EP4_ACTIVATE_BLANK_FEATURED') ? EP4_ACTIVATE_BLANK_FEATURED : true))) {
               $v_status = 1;
-              $v_date_status_change = date("Y-m-d");
             } else {
               $v_status = 0;
-              $v_date_status_change = date("Y-m-d");
             }
+            $v_date_status_change = date("Y-m-d");
             $sql = "UPDATE " . TABLE_FEATURED . " SET
               featured_last_modified  = CURRENT_TIMESTAMP,
               expires_date            = :expires_date:,
@@ -110,11 +109,10 @@
             }
             if (($v_today >= strtotime($v_featured_date_available)) && ($v_today < strtotime($v_expires_date)) || ($v_today >= strtotime($v_featured_date_available) && $v_featured_date_available != '0001-01-01' && $v_expires_date == '0001-01-01') || ($v_featured_date_available == '0001-01-01' && $v_expires_date == '0001-01-01' && (defined('EP4_ACTIVATE_BLANK_FEATURED') ? EP4_ACTIVATE_BLANK_FEATURED : true))) {
               $v_status = 1;
-              $v_date_status_change = date("Y-m-d");
             } else {
               $v_status = 0;
-              $v_date_status_change = date("Y-m-d");
             }
+            $v_date_status_change = date("Y-m-d");
             $sql = "INSERT INTO " . TABLE_FEATURED . " SET
               featured_id             = :max_featured_id:,
               products_id             = :products_id:,

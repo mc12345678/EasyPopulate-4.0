@@ -6,7 +6,7 @@
  */
 
        $sync = false;
-      if (!is_null($_POST['sync']) && isset($_POST['sync']) && $_POST['sync'] == '1') {
+      if (isset($_POST['sync']) && $_POST['sync'] == '1') {
         $query = array();
         $sync = true;
 

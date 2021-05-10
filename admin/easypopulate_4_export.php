@@ -842,10 +842,6 @@ while ($row = $ep_4_fetch_array($result)) {
         $row_record_artists_info = $ep_4_fetch_array($result_record_artists_info);
         $row['v_artists_url_' . $lid_code] = $row['v_artists_url_' . $lid] = $row_record_artists_info['artists_url'];
       }
-      unset($key);
-      unset($lang);
-      unset($lid);
-      unset($lid_code);
 
     } else {
       $row['v_artists_name'] = ''; // no artists name
@@ -855,12 +851,12 @@ while ($row = $ep_4_fetch_array($result)) {
         $lid_code = $lang['code'];
         $row['v_artists_url_' . $lid_code] = $row['v_artists_url_' . $lid] = '';
       }
-      unset($key);
-      unset($lang);
-      unset($lid);
-      unset($lid_code);
 
     }
+    unset($key);
+    unset($lang);
+    unset($lid);
+    unset($lid_code);
     // record company
     if (!empty($row_music_extra['record_company_id'])) { // '0' is correct, but '' NULL is possible
       $sql_record_company = 'SELECT * FROM ' . TABLE_RECORD_COMPANY . ' WHERE record_company_id = :record_company_id: LIMIT 1';

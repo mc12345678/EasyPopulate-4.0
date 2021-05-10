@@ -1144,7 +1144,6 @@ if (!(isset($_POST['import']) && $_POST['import'] != '')) {
                   unset($temp_categories_name);
                   
                   $sql = $db->bindVars($sql, ':categories_name:', ep_4_curly_quotes($categories_names_array['id'][$cat_lang_id][$category_index]), $zc_support_ignore_null);
-                  $sql = $db->bindVars($sql, ':categories_description:', $cat_desc_default, $zc_support_ignore_null);
                 } else { // column is missing, so default to defined column's value
                   $post_array = array(
                     'categories_name' => array(
@@ -1163,8 +1162,8 @@ if (!(isset($_POST['import']) && $_POST['import'] != '')) {
                   unset($temp_categories_name);
 
                   $sql = $db->bindVars($sql, ':categories_name:', ep_4_curly_quotes($thiscategoryname), $zc_support_ignore_null);
-                  $sql = $db->bindVars($sql, ':categories_description:', $cat_desc_default, $zc_support_ignore_null);
                 }
+                $sql = $db->bindVars($sql, ':categories_description:', $cat_desc_default, $zc_support_ignore_null);
                 unset($v_categories_name_check);
                 unset($cat_lang_id);
 
@@ -1595,11 +1594,6 @@ if (!(isset($_POST['import']) && $_POST['import'] != '')) {
                   metatags_keywords = :metatags_keywords:,
                   metatags_description = :metatags_description:
                   WHERE (products_id = :products_id: AND language_id = :key:)";
-                $sql = $db->bindVars($sql, ':metatags_title:', ep_4_curly_quotes($v_metatags_title[$key]), $zc_support_ignore_null);
-                $sql = $db->bindVars($sql, ':metatags_keywords:', ep_4_curly_quotes($v_metatags_keywords[$key]), $zc_support_ignore_null);
-                $sql = $db->bindVars($sql, ':metatags_description:', ep_4_curly_quotes($v_metatags_description[$key]), $zc_support_ignore_null);
-                $sql = $db->bindVars($sql, ':products_id:', $v_products_id, 'integer');
-                $sql = $db->bindVars($sql, ':key:', $key, 'integer');
               } else {
                 // NEW
                 $sql = "INSERT INTO " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . " SET
@@ -1608,12 +1602,12 @@ if (!(isset($_POST['import']) && $_POST['import'] != '')) {
                   metatags_description = :metatags_description:,
                   products_id = :products_id:,
                   language_id = :key:";
-                $sql = $db->bindVars($sql, ':metatags_title:', ep_4_curly_quotes($v_metatags_title[$key]), $zc_support_ignore_null);
-                $sql = $db->bindVars($sql, ':metatags_keywords:', ep_4_curly_quotes($v_metatags_keywords[$key]), $zc_support_ignore_null);
-                $sql = $db->bindVars($sql, ':metatags_description:', ep_4_curly_quotes($v_metatags_description[$key]), $zc_support_ignore_null);
-                $sql = $db->bindVars($sql, ':products_id:', $v_products_id, 'integer');
-                $sql = $db->bindVars($sql, ':key:', $key, 'integer');
               }
+              $sql = $db->bindVars($sql, ':metatags_title:', ep_4_curly_quotes($v_metatags_title[$key]), $zc_support_ignore_null);
+              $sql = $db->bindVars($sql, ':metatags_keywords:', ep_4_curly_quotes($v_metatags_keywords[$key]), $zc_support_ignore_null);
+              $sql = $db->bindVars($sql, ':metatags_description:', ep_4_curly_quotes($v_metatags_description[$key]), $zc_support_ignore_null);
+              $sql = $db->bindVars($sql, ':products_id:', $v_products_id, 'integer');
+              $sql = $db->bindVars($sql, ':key:', $key, 'integer');
               unset($row);
               $result = ep_4_query($sql);
               unset($sql);
