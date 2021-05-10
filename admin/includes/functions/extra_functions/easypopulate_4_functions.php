@@ -88,7 +88,13 @@ function ep_4_SBA1Exists () {
   $ep_uses_mysqli = ((PROJECT_VERSION_MAJOR > '1' || PROJECT_VERSION_MINOR >= '5.3') ? true : false);
   // The current thought is to have one of these Exists files for each version of SBA to consider; however, they also all could fall under one SBA_Exists check provided some return is made and a comparison done on the other end about what was returned.
   //Check to see if any version of Stock with attributes is installed (If so, and properly programmed, there should be a define for the table associated with the stock.  There may be more than one, and if so, they should all be verified for the particular SBA.
-  if (defined('TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK')) {
+  if (!defined('TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK')) {
+    unset($project);
+    unset($ep_uses_mysqli);
+
+    return false;
+  }
+
     $tablePresent = ep_4_query('SELECT *
           FROM information_schema.tables
           WHERE table_schema = \'' . DB_DATABASE . '\'
@@ -107,6 +113,17 @@ function ep_4_SBA1Exists () {
     $colsarray = ep_4_query('SHOW COLUMNS FROM ' . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK);
 //    echo 'After execute<br />';
     $numCols = ($ep_uses_mysqli ? mysqli_num_rows($colsarray) : mysql_num_rows($colsarray));
+
+    if ($numCols < 5) {
+      unset($project);
+      unset($ep_uses_mysqli);
+      unset($tablePresent);
+      unset($colsarray);
+      unset($numCols);
+      unset($row);
+      return false;
+    }
+
     if ($numCols == 5) {
       while ($row = ($ep_uses_mysqli ? mysqli_fetch_array($colsarray) : mysql_fetch_array($colsarray))){
         switch ($row['Field']) {
@@ -166,21 +183,7 @@ function ep_4_SBA1Exists () {
         unset($desired);
         return false;
       }
-    } else {
-      unset($project);
-      unset($ep_uses_mysqli);
-      unset($tablePresent);
-      unset($colsarray);
-      unset($numCols);
-      unset($row);
-      return false;
     }
-  } else {
-    unset($project);
-    unset($ep_uses_mysqli);
-
-    return false;
-  }
 }
 
 function ep_4_CEONURIExists () {
@@ -188,59 +191,54 @@ function ep_4_CEONURIExists () {
   $ep_uses_mysqli = ((PROJECT_VERSION_MAJOR > '1' || PROJECT_VERSION_MINOR >= '5.3') ? true : false);
   // The current thought is to have one of these Exists files for each version of SBA to consider; however, they also all could fall under one SBA_Exists check provided some return is made and a comparison done on the other end about what was returned.
   //Check to see if any version of Stock with attributes is installed (If so, and properly programmed, there should be a define for the table associated with the stock.  There may be more than one, and if so, they should all be verified for the particular SBA.
-  if (defined('TABLE_CEON_URI_MAPPINGS')) {
-    //Now that have identified that the table (applicable to mc12345678's store, has been identified as in existence, now need to look at the setup of the table (Number of columns and if each column identified below is in the table, or conversely if the table's column matches the list below.
-    //Columns in table: stock_id, products_id, stock_attributes, quantity, and sort.
-    $colsarray = ep_4_query('SHOW COLUMNS FROM ' . TABLE_CEON_URI_MAPPINGS);
-//    echo 'After execute<br />';
-    $numCols = ($ep_uses_mysqli ? ($colsarray === false ? 0 : mysqli_num_rows($colsarray)) : mysql_num_rows($colsarray));
-    if ($numCols == 9) {
-      while ($row = ($ep_uses_mysqli ? mysqli_fetch_array($colsarray) : mysql_fetch_array($colsarray))){
-        switch ($row['Field']) {
-          case 'uri':
-          case 'language_id':
-          case 'current_uri':
-          case 'main_page':
-          case 'query_string_parameters':
-          case 'associated_db_id':
-          case 'alternate_uri':
-          case 'redirection_type_code':
-          case 'date_added':
-            break;
-          default:
-            unset($project);
-            unset($ep_uses_mysqli);
-            unset($colsarray);
-            unset($numCols);
-            unset($row);
-            return false;
-            break;
-
-        }
-      }
-
-      unset($project);
-      unset($ep_uses_mysqli);
-      unset($colsarray);
-      unset($numCols);
-      unset($row);
-      if (file_exists(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.CeonURIMappingAdmin.php') ) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      unset($project);
-      unset($ep_uses_mysqli);
-      unset($colsarray);
-      unset($numCols);
-      return false;
-    }
-  } else {
+  if (!defined('TABLE_CEON_URI_MAPPINGS')) {
     unset($project);
     unset($ep_uses_mysqli);
     return false;
   }
+  //Now that have identified that the table (applicable to mc12345678's store, has been identified as in existence, now need to look at the setup of the table (Number of columns and if each column identified below is in the table, or conversely if the table's column matches the list below.
+  //Columns in table: stock_id, products_id, stock_attributes, quantity, and sort.
+  $colsarray = ep_4_query('SHOW COLUMNS FROM ' . TABLE_CEON_URI_MAPPINGS);
+//    echo 'After execute<br />';
+  $numCols = ($ep_uses_mysqli ? ($colsarray === false ? 0 : mysqli_num_rows($colsarray)) : mysql_num_rows($colsarray));
+  if ($numCols != 9) {
+    unset($project);
+    unset($ep_uses_mysqli);
+    unset($colsarray);
+    unset($numCols);
+    return false;
+  }
+  while ($row = ($ep_uses_mysqli ? mysqli_fetch_array($colsarray) : mysql_fetch_array($colsarray))){
+    switch ($row['Field']) {
+      case 'uri':
+      case 'language_id':
+      case 'current_uri':
+      case 'main_page':
+      case 'query_string_parameters':
+      case 'associated_db_id':
+      case 'alternate_uri':
+      case 'redirection_type_code':
+      case 'date_added':
+        break;
+      default:
+        unset($project);
+        unset($ep_uses_mysqli);
+        unset($colsarray);
+        unset($numCols);
+        unset($row);
+        return false;
+        break;
+
+    }
+  }
+
+  unset($project);
+  unset($ep_uses_mysqli);
+  unset($colsarray);
+  unset($numCols);
+  unset($row);
+
+  return file_exists(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.CeonURIMappingAdmin.php');
 }
 
 if (!function_exists('zen_get_sub_categories')) {
@@ -904,6 +902,7 @@ function remove_easypopulate_4() {
 
 function ep_4_chmod_check($tempdir) {
   global $messageStack;
+  $chmod_check = true;
   if (!@file_exists((EP4_ADMIN_TEMP_DIRECTORY !== 'true' ? /* Storeside */ DIR_FS_CATALOG : /* Admin side */ DIR_FS_ADMIN) . $tempdir . ".")) { // directory does not exist
     $messageStack->add(sprintf(EASYPOPULATE_4_MSGSTACK_TEMP_FOLDER_MISSING, $tempdir, (EP4_ADMIN_TEMP_DIRECTORY !== 'true' ? /* Storeside */ DIR_FS_CATALOG : /* Admin side */ DIR_FS_ADMIN)), 'warning');
     $chmod_check = false;
@@ -911,8 +910,6 @@ function ep_4_chmod_check($tempdir) {
     if (!@is_writable((EP4_ADMIN_TEMP_DIRECTORY !== 'true' ? /* Storeside */ DIR_FS_CATALOG : /* Admin side */ DIR_FS_ADMIN) . $tempdir . ".")) { // directory does not exist
       $messageStack->add(sprintf(EASYPOPULATE_4_MSGSTACK_TEMP_FOLDER_NOT_WRITABLE, $tempdir, (EP4_ADMIN_TEMP_DIRECTORY !== 'true' ? /* Storeside */ DIR_FS_CATALOG : /* Admin side */ DIR_FS_ADMIN)), 'warning');
       $chmod_check = false;
-    } else {
-      $chmod_check = true;
     }
   }
   return $chmod_check;
@@ -1012,19 +1009,11 @@ function ep4_field_in_file($field_name) {
   if (is_null($field_name)) {
     return false;
   }
-  
-  if ( (isset($GLOBALS['filelayout'][$field_name])
-         || array_key_exists($field_name, $GLOBALS['filelayout'])
-       )
-     &&
-       (isset($GLOBALS['items'][$GLOBALS['filelayout'][$field_name]])
-         || array_key_exists($GLOBALS['filelayout'][$field_name], $GLOBALS['items'])
-       )
-     ) {
-      return true;
-  }
-  
-  return false;
+
+  return array_key_exists('filelayout', $GLOBALS) &&
+    array_key_exists($field_name, $GLOBALS['filelayout']) &&
+    array_key_exists('items', $GLOBALS) &&
+    array_key_exists($GLOBALS['filelayout'][$field_name], $GLOBALS['items']);
 }
 
 function ep4_post_sanitize($post_array) {
