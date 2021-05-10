@@ -22,6 +22,7 @@ if (!(isset($_POST['import']) && $_POST['import'] != '')) {
   return;
 }
   $time_start = microtime(true); // benchmarking
+  if (!isset($display_output)) $display_output = '';
   $display_output .= EASYPOPULATE_4_DISPLAY_HEADING;
 
   $file = array('name' => $_POST['import']);
@@ -122,51 +123,93 @@ if (!(isset($_POST['import']) && $_POST['import'] != '')) {
 
     $zco_notifier->notify('EP4_IMPORT_AFTER_EP4_DB_FILTER_KEY');
 
-    // Featured Products 5-2-2012
-    if (strtolower(substr($file['name'], 0, 11)) == "featured-ep") {
-      require(DIR_FS_ADMIN . DIR_WS_MODULES . 'easypopulate_4_featured_ep.php');
-    } // Featured Products
+    $file_data = array(
+      array(
+        'name' => 'featured-ep', // Featured Products 5-2-2012
+        'path' => DIR_WS_MODULES . 'easypopulate_4_featured_ep.php',
+      ),
+      array(
+        'name' => 'attrib-basic-ep', // Basic Attributes Import
+        'path' => 'easypopulate_4_attrib.php',
+        'do_main' => false,
+      ),
+      array(
+        'name' => 'attrib-detailed-ep', // Detailed Attributes Import
+        'path' => DIR_WS_MODULES . 'easypopulate_4_attrib_detailed_ep.php',
+        'do_main' => false,
+      ),
+      array(
+        'name' => 'sba-detailed-ep', // Detailed SBA (Stock by Attributes) Attributes Import
+        'path' => DIR_WS_MODULES . 'easypopulate_4_attrib_detailed_ep.php',
+        'supported' => $ep_4_SBAEnabled != false,
+        'do_main' => false,
+      ),
+      // Import stock quantity knowing that cart has SBA installed:
+      // FOR RESYNC, THEN THE FOLLOWING APPLIES and will need to get/carry over the
+      // $stock class:
+      // require(DIR_WS_CLASSES . 'products_with_attributes_stock.php');
+      // $stock = new products_with_attributes_stock;
+      //    if(is_numeric((int)$_POST['products_id'])){
+      //      $stock->update_parent_products_stock((int)$_POST['products_id']);
+      //    $messageStack->add_session('Parent Product Quantity Updated', 'success');
+      array(
+        'name' => 'sba-stock-ep', // Import stock quantity knowing that cart has SBA installed
+        'path' => DIR_WS_MODULES . 'easypopulate_4_sba_stock_ep.php',
+        'supported' => $ep_4_SBAEnabled != false,
+        'do_main' => false,
+      ),
+      array(
+        'name' => 'sba-', // Specifically consider all sba- prefixed files.
+        'supported' => 'skip_all', // skip the main file if this is set as 'skip_all' without 'path'
+        'do_main' => false,
+      ),
+      array(
+        'name' => 'attrib-', // Specifically consider all attrib- prefixed files.
+        'supported' => 'skip_all', // skip the main file if this is set as 'skip_all' without 'path'
+        'do_main' => false,
+      ),
+      // CATEGORIES1
+      // This Category MetaTags import routine only deals with existing Categories. It does not create or modify the tree.
+      // This code is ONLY used to Edit Categories image, description, and metatags data!
+      // Categories are updated via the categories_id NOT the Name!! Very important distinction here!
+      // mc12345678 below routine: categorymeta-ep could possibly clear assignments of
+      //   data if the field(s) are not included in the download file.  This
+      //   needs to be modified to allow a reduced set of columns to be imported.
+      array(
+        'name' => 'categorymeta-ep',
+        'path' => DIR_WS_MODULES . 'easypopulate_4_import_categorymeta_ep.php',
+        'do_main' => false,
+      ),
+    );
+    
+    $zco_notifier->notify('NOTIFY_EP4_IMPORT_COLLECT_FILE_INFO', $file, $file_data);
+    
+    $do_main = true;
+    foreach ($file_data as $data) {
+      // Continue checks if the file to import doesn't match a templated filename
+      if (strtolower(substr($file['name'], 0, strlen($data['name']))) != $data['name']) {
+        continue;
+      }
+      // Found matching import file type, but import of that type is not supported
+      if (array_key_exists('supported', $data) && !$data['supported']) {
+        break;
+      }
+      // Skip a file type if not identified nor exists
+      if (!array_key_exists('path', $data) || !is_file($data['path'])) {
+        if (array_key_exists('supported', $data) && $data['supported'] == 'skip_all') {
+          $do_main = false;
+        }
+        break;
+      }
+      require $data['path'];
+      // Set/change the status of accessing the main import
+      if (array_key_exists('do_main', $data)) {
+        $do_main = $data['do_main'];
+      }
+      break; // This may not be appropriate for some "users" as previous operation allowed multiple "files" to be included, although that was *not* intentional.
+    }
 
-    // Basic Attributes Import
-    if (strtolower(substr($file['name'], 0, 15)) == "attrib-basic-ep") {
-      require_once('easypopulate_4_attrib.php');
-    } // Attributes Import
-
-    // Detailed Attributes Import
-    if (strtolower(substr($file['name'], 0, 18)) == "attrib-detailed-ep") {
-      require(DIR_FS_ADMIN . DIR_WS_MODULES . 'easypopulate_4_attrib_detailed_ep.php');
-    } // if Detailed Attributes Import
-
-    // Detailed Attributes Import
-    if (strtolower(substr($file['name'], 0, 15)) == "sba-detailed-ep" && $ep_4_SBAEnabled != false) {
-      require(DIR_FS_ADMIN . DIR_WS_MODULES . 'easypopulate_4_sba_detailed_ep.php');
-    } // if Detailed Stock By Attributes Import
-
-    // Import stock quantity knowing that cart has SBA installed:
-    // FOR RESYNC, THEN THE FOLLOWING APPLIES and will need to get/carry over the
-    // $stock class:
-    // require(DIR_WS_CLASSES . 'products_with_attributes_stock.php');
-    // $stock = new products_with_attributes_stock;
-    //    if(is_numeric((int)$_POST['products_id'])){
-    //      $stock->update_parent_products_stock((int)$_POST['products_id']);
-    //    $messageStack->add_session('Parent Product Quantity Updated', 'success');
-
-    if (strtolower(substr($file['name'], 0, 12)) == "sba-stock-ep" && $ep_4_SBAEnabled != false) {
-      require(DIR_WS_MODULES . 'easypopulate_4_sba_stock_ep.php');
-    } // End of Import stock quantity knowing that cart has SBA installed.
-
-    // CATEGORIES1
-    // This Category MetaTags import routine only deals with existing Categories. It does not create or modify the tree.
-    // This code is ONLY used to Edit Categories image, description, and metatags data!
-    // Categories are updated via the categories_id NOT the Name!! Very important distinction here!
-    // mc12345678 below routine: categorymeta-ep could possibly clear assignments of
-    //   data if the field(s) are not included in the download file.  This
-    //   needs to be modified to allow a reduced set of columns to be imported.
-    if (strtolower(substr($file['name'], 0, 15)) == "categorymeta-ep") {
-      require(DIR_WS_MODULES . 'easypopulate_4_import_categorymeta_ep.php');
-    } // if
-
-    if (( strtolower(substr($file['name'], 0, 15)) <> "categorymeta-ep") && ( strtolower(substr($file['name'], 0, 7)) <> "attrib-") && ($ep_4_SBAEnabled != false ? ( strtolower(substr($file['name'], 0, 4)) <> "sba-") : true )) { //  temporary solution here... 12-06-2010
+    if (!empty($do_main)) { //  temporary solution here... 12-06-2010
       $zco_notifier->notify('EP4_IMPORT_GENERAL_FILE_ALL');
 
       $missing_key = false;
