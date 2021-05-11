@@ -9,13 +9,6 @@
 
         @set_time_limit($ep_execution);
 
-        $sql = 'SELECT * FROM ' . TABLE_PRODUCTS_ATTRIBUTES . '
-          WHERE (
-          products_attributes_id = :products_attributes_id:' . /* AND
-                  products_id = '.$items[$filelayout['v_products_id']].' AND
-                  options_id = '.$items[$filelayout['v_options_id']].' AND
-                  options_values_id = '.$items[$filelayout['v_options_values_id']].'
-                 */' ) LIMIT 1';
         $sql = 'SELECT * FROM ' . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . '
           WHERE (
           stock_id = :stock_id: ' . /* AND
@@ -27,7 +20,14 @@
         $sql = $db->bindVars($sql, ':products_attributes_id:', $items[$filelayout['v_products_attributes_id']], 'integer');
 
         $result = ep_4_query($sql);
-        if ($row = $ep_4_fetch_array($result)) {
+        unset($sql);
+        if (!($row = $ep_4_fetch_array($result))) { // error Attribute entry not found - needs work!
+          $display_output .= sprintf(EASYPOPULATE_4_DISPLAY_RESULT_SBA_DETAIL_NOT_FOUND, $items[$filelayout[$chosen_key]], $chosen_key);
+          unset($result);
+          $ep_error_count++;
+          ep4_flush();
+          continue;
+        }
           // UPDATE
           $sql = "UPDATE " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " SET
             products_id                 = :products_id:,
@@ -47,9 +47,11 @@
           $sql = $db->bindVars($sql, ':stock_id:', $items[$filelayout['v_stock_id']], 'integer');
 
           $result = ep_4_query($sql);
+        unset($sql);
           if ($result) {
             zen_record_admin_activity('Updated products with attributes stock ' . (int) $items[$filelayout['v_stock_id']] . ' via EP4.', 'info');
           }
+        unset($result);
 
           if ($items[$filelayout['v_products_attributes_filename']] <> '') { // download file name
             $sql = 'SELECT * FROM ' . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . '
@@ -57,44 +59,34 @@
             $sql = $db->bindVars($sql, ':products_attributes_id:', $items[$filelayout['v_products_attributes_id']], 'integer');
 
             $result = ep_4_query($sql);
+          unset($sql);
+          $sql_text = "INSERT INTO ";
+          $admin_act_text = "inserted";
             if ($row = $ep_4_fetch_array($result)) { // update
-              $sql = "UPDATE " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " SET
-                products_attributes_filename = :products_attributes_filename:,
-                products_attributes_maxdays  = :products_attributes_maxdays:,
-                products_attributes_maxcount = :products_attributes_maxcount:
-                WHERE (
-                products_attributes_id = :products_attributes_id:)";
-              $sql = $db->bindVars($sql, ':products_attributes_filename:', $items[$filelayout['v_products_attributes_filename']], 'string');
-              $sql = $db->bindVars($sql, ':products_attributes_maxdays:', $items[$filelayout['v_products_attributes_maxdays']], 'integer');
-              $sql = $db->bindVars($sql, ':products_attributes_maxcount:', $items[$filelayout['v_products_attributes_maxcount']], 'integer');
-              $sql = $db->bindVars($sql, ':products_attributes_id:', $items[$filelayout['v_products_attributes_id']], 'integer');
-
-              $result = ep_4_query($sql);
-              if ($result) {
-                zen_record_admin_activity('Downloads-manager details updated by EP4 for ' . $items[$filelayout['v_products_attributes_id']], 'info');
-              }
-            } else { // insert
-              $sql = "INSERT INTO " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " SET
-                products_attributes_id       = :products_attributes_id:,
-                products_attributes_filename = :products_attributes_filename:,
-                products_attributes_maxdays  = :products_attributes_maxdays:,
-                products_attributes_maxcount = :products_attributes_maxcount:";
-
-              $sql = $db->bindVars($sql, ':products_attributes_id:', $items[$filelayout['v_products_attributes_id']], 'integer');
-              $sql = $db->bindVars($sql, ':products_attributes_filename:', $items[$filelayout['v_products_attributes_filename']], 'string');
-              $sql = $db->bindVars($sql, ':products_attributes_maxdays:', $items[$filelayout['v_products_attributes_maxdays']], 'integer');
-              $sql = $db->bindVars($sql, ':products_attributes_maxcount:', $items[$filelayout['v_products_attributes_maxcount']], 'integer');
-
-              $result = ep_4_query($sql);
-              if ($result) {
-                zen_record_admin_activity('Downloads-manager details inserted by EP4 for ' . $items[$filelayout['v_products_attributes_id']], 'info');
-              }
-            }
+            $sql_text = "UPDATE ";
+            $admin_act_text = "updated";
           }
+          unset($result);
+          $sql = $sql_text . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " SET
+                products_attributes_filename = :products_attributes_filename:,
+                products_attributes_maxdays  = :products_attributes_maxdays:,
+            products_attributes_maxcount = :products_attributes_maxcount:" . 
+            ($sql_text === "UPDATE " ? 
+            " WHERE (
+            products_attributes_id = :products_attributes_id:) " :
+            " products_attributes_id      = :products_attributes_id: ");
+          unset($sql_text);
+              $sql = $db->bindVars($sql, ':products_attributes_filename:', $items[$filelayout['v_products_attributes_filename']], 'string');
+              $sql = $db->bindVars($sql, ':products_attributes_maxdays:', $items[$filelayout['v_products_attributes_maxdays']], 'integer');
+              $sql = $db->bindVars($sql, ':products_attributes_maxcount:', $items[$filelayout['v_products_attributes_maxcount']], 'integer');
+              $sql = $db->bindVars($sql, ':products_attributes_id:', $items[$filelayout['v_products_attributes_id']], 'integer');
+
+              $result = ep_4_query($sql);
+              if ($result) {
+            zen_record_admin_activity('Downloads-manager details " . $admin_act_text . " by EP4 for ' . $items[$filelayout['v_products_attributes_id']], 'info');
+          }
+          unset($admin_act_text, $result);
+              }
           $ep_update_count++;
-        } else { // error Attribute entry not found - needs work!
-          $display_output .= sprintf(EASYPOPULATE_4_DISPLAY_RESULT_SBA_DETAIL_NOT_FOUND, $items[$filelayout[$chosen_key]], $chosen_key);
-          $ep_error_count++;
-        } // if
         ep4_flush();
       } // while
