@@ -12,8 +12,7 @@
         if (!ep4_field_in_file('v_categories_id')) {
           $display_output .= sprintf(EASYPOPULATE_4_DISPLAY_RESULT_CATEGORY_ID_NOT_FOUND, '0');
           $ep_error_count++;
-          print(str_repeat(" ", 300));
-          flush();
+          ep4_flush();
           break;
         } // if category found
 
@@ -28,8 +27,7 @@
         if (!$row) {
           $display_output .= sprintf(EASYPOPULATE_4_DISPLAY_RESULT_CATEGORY_ID_NOT_FOUND, $items[$filelayout['v_categories_id']]);
           $ep_error_count++;
-          print(str_repeat(" ", 300));
-          flush();
+          ep4_flush();
           continue;
         }
         
@@ -228,6 +226,5 @@
           $display_output .= sprintf(EASYPOPULATE_4_DISPLAY_RESULT_CATEGORY_ID_NOT_FOUND, $items[$filelayout['v_categories_id']]);
           $ep_error_count++;
         } // if category found*/
-        print(str_repeat(" ", 300));
-        flush();
+        ep4_flush();
       } // while

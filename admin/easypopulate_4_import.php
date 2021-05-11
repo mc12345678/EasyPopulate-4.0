@@ -2171,8 +2171,7 @@ if (!(isset($_POST['import']) && $_POST['import'] != '')) {
           unset($summary);
         } // end of row insertion code
         unset($items);
-        print(str_repeat(" ", 300));
-        flush();
+        ep4_flush();
       } // end of Main While Loop
       unset($handle);
       print("\n");

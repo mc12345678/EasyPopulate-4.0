@@ -17,8 +17,7 @@
           // error Attribute entry not found or the file does not contain necessary records - needs work!
           $display_output .= sprintf('<br /><font color="red"><b>SKIPPED! - Attribute Entry on ' . substr($chosen_key, 2) . ': </b>%s - Not Found!</font>', $items[$filelayout[$chosen_key]]);
           $ep_error_count++;
-          print(str_repeat(" ", 300));
-          flush();
+          ep4_flush();
           continue;
         }
 
@@ -164,6 +163,5 @@
           $display_output .= sprintf('<br /><font color="red"><b>SKIPPED! - Attribute Entry on ' . substr($chosen_key, 2) . ': </b>%s - Not Found!</font>', $items[$filelayout[$chosen_key]]);
           $ep_error_count++;
         } // if
-        print(str_repeat(" ", 300));
-        flush();
+        ep4_flush();
       } // while

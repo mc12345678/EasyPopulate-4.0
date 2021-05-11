@@ -1102,3 +1102,9 @@ function ep4_post_sanitize($post_array) {
   
   return $return_val;
 }
+
+function ep4_flush()
+{
+  print(str_repeat(" ", 300));
+  flush();
+}

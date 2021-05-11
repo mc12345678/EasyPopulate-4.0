@@ -62,8 +62,7 @@
             $ep_error_count++;
           } // if
         } //end if Standard / SBA stock
-        print(str_repeat(" ", 300));
-        flush();
+        ep4_flush();
       } // end while
 
       if ($sync) {

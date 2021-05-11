@@ -138,6 +138,5 @@
           $display_output .= sprintf('<br /><font color="red"><b>SKIPPED! - ' . $chosen_key . ': </b>%s - Not Found!</font>', $items[$filelayout[$chosen_key]]);
           $ep_error_count++;
         }
-        print(str_repeat(" ", 300));
-        flush();
+        ep4_flush();
       }

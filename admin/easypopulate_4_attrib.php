@@ -388,8 +388,7 @@ while (($contents = fgetcsv($handle, 0, $csv_delimiter, $csv_enclosure)) !== fal
     //} // END: if
     unset($row);
   }  // END: while #2
-  print(str_repeat(" ", 300));
-  flush();
+  ep4_flush();
   unset($contents);
 } // END: while #1
 

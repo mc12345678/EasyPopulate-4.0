@@ -959,8 +959,7 @@ while ($row = $ep_4_fetch_array($result)) {
   unset($row);
   $ep_export_count++;
   } // if $ep_dltype == 'attrib_basic'
-  print(str_repeat(" ", 300));
-  flush();
+  ep4_flush();
 } // while ($row)
 //Start SBA1 addresses writing to the file
 print("\n");

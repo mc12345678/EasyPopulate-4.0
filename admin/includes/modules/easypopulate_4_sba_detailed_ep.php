@@ -96,6 +96,5 @@
           $display_output .= sprintf(EASYPOPULATE_4_DISPLAY_RESULT_SBA_DETAIL_NOT_FOUND, $items[$filelayout[$chosen_key]], $chosen_key);
           $ep_error_count++;
         } // if
-        print(str_repeat(" ", 300));
-        flush();
+        ep4_flush();
       } // while
