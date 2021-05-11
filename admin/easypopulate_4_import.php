@@ -184,6 +184,7 @@ if (!(isset($_POST['import']) && $_POST['import'] != '')) {
     
     $zco_notifier->notify('NOTIFY_EP4_IMPORT_COLLECT_FILE_INFO', $file, $file_data);
     
+    // @TODO: consider making this a module file: 'process_sub_files.php' or similar
     $do_main = true;
     foreach ($file_data as $data) {
       // Continue checks if the file to import doesn't match a templated filename
