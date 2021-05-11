@@ -1338,7 +1338,7 @@ if (!(isset($_POST['import']) && $_POST['import'] != '')) {
             }
             if (count($custom_fields) > 0) {
               foreach ($custom_fields as $field) {
-                if (!($field != 'products_id' || ( $field == 'products_id' && defined('EP4_DB_FILTER_KEY') && EP4_DB_FILTER_KEY === 'blank_new' && zen_not_null(${$chosen_key})))) {
+                if (!($field != 'products_id' || (defined('EP4_DB_FILTER_KEY') && EP4_DB_FILTER_KEY === 'blank_new' && zen_not_null(${$chosen_key})))) {
                   continue;
                 }
                 $value = 'v_' . $field;
