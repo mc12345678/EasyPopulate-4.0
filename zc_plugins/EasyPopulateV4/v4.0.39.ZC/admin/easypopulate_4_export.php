@@ -360,7 +360,8 @@ while ($result !== false && ($row = $ep_4_fetch_array($result))) {
     $active_language_id = (int)$row['v_language_id'];
 
     $active_row['v_products_model'] = $row['v_products_model'];
-    if ($chosen_key != 'v_products_model' && zen_not_null($chosen_key)) {
+    $active_row['v_products_id'] = $row['v_products_id'];
+    if ($chosen_key != 'v_products_model' && $chosen_key != 'v_products_id' && zen_not_null($chosen_key)) {
         $active_row[$chosen_key] = $row[$chosen_key];
     }
     $active_row['v_products_options_type'] = (int)$row['v_products_options_type'];
