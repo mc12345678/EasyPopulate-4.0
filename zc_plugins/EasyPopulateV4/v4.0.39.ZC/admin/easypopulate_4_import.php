@@ -634,7 +634,7 @@ if (!(isset($_POST['import']) && $_POST['import'] != '')) {
         }
 
         // if $v_products_quantity is null, set it to: 0
-        if (trim($v_products_quantity) == '') {
+        if (!isset($v_products_quantity) || trim($v_products_quantity) == '') {
           $v_products_quantity = 0; // new products are set to quantity '0', updated products are set with default_these() values
         }
 
@@ -667,7 +667,7 @@ if (!(isset($_POST['import']) && $_POST['import'] != '')) {
         // mc12345678 NOT SO SURE THIS SHOULD BE SET TO THE NO_IMAGE Image
         //  Automatically as this actually modifies the database rather than
         //  allow the system to operate independent Sunday
-        if (trim($v_products_image) == '') {
+        if (!isset($v_products_image) || trim($v_products_image) == '') {
           $v_products_image = (EP4_REPLACE_BLANK_IMAGE === 'true' ? PRODUCTS_IMAGE_NO_IMAGE : '');
         }
 
