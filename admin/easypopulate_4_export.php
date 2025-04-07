@@ -449,12 +449,12 @@ while ($result !== false && ($row = $ep_4_fetch_array($result))) {
       $result2 = ep_4_query($sql2);
       unset($sql2);
       $row2 = $ep_4_fetch_array($result2);
-      $row['v_products_name_' . $lid2_code] = $row['v_products_name_' . $lid2] = $row2['products_name'];
-      $row['v_products_description_' . $lid2_code] = $row['v_products_description_' . $lid2] = $row2['products_description'];
+      $row['v_products_name_' . $lid2_code] = $row['v_products_name_' . $lid2] = (isset($row2['products_name']) ? $row2['products_name'] : '');
+      $row['v_products_description_' . $lid2_code] = $row['v_products_description_' . $lid2] = (isset($row2['products_description']) ? $row2['products_description'] : '');
       if ($ep_supported_mods['psd'] == true) { // products short descriptions mod
-        $row['v_products_short_desc_' . $lid2_code] = $row['v_products_short_desc_' . $lid2] = $row2['products_short_desc'];
+        $row['v_products_short_desc_' . $lid2_code] = $row['v_products_short_desc_' . $lid2] = (isset($row2['products_short_desc']) ? $row2['products_short_desc'] : '');
       }
-      $row['v_products_url_' . $lid2_code] = $row['v_products_url_' . $lid2] = $row2['products_url'];
+      $row['v_products_url_' . $lid2_code] = $row['v_products_url_' . $lid2] = (isset($row2['products_url']) ? $row2['products_url'] : '');
       unset($row2);
       // metaData start
       // for each language, get the description and set the vals
