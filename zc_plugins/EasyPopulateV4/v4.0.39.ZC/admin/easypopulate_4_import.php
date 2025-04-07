@@ -83,7 +83,7 @@ if (!(isset($_POST['import']) && $_POST['import'] != '')) {
     }
   }
 
-  unset($file_location);
+  //unset($file_location); //Variable needed later, do not unset.
 
   // Read Column Headers
   if (!$no_bypass && ($raw_headers = fgetcsv($handle, 0, $csv_delimiter, $csv_enclosure)) !== false) {
