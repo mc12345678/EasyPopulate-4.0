@@ -29,13 +29,41 @@ function doCollectEP4SelectData()
           ep_category_filter.html(orig);
       }
       ep_category_filter.val(oldVal);
+      if (window.console) {
+        if (typeof(console.log) == 'function') {
+          console.log("false path");
+        }
+      }
     } else {
       if (orig == null) {
         orig = ep_category_filter.html();
       }
       ep_category_filter.html(response.down_filter);
+      if (window.console) {
+        if (typeof(console.log) == 'function') {
+          console.log("other path");
+        }
+      }
     }
- });
+ }).fail(function (e) {
+    let ep_category_filter = $('select[name="ep_category_filter"]');
+    if (ep_category_filter.length == 0) {
+      return false;
+    }
+
+    let oldVal = ep_category_filter.val();
+    if (orig != null)
+    {
+      ep_category_filter.html(orig);
+    }
+    ep_category_filter.val(oldVal);
+    if (window.console) {
+      if (typeof(console.log) == 'function') {
+        console.log("fail path");
+      }
+    }
+ }
+ );
 }
 
 $(document).ready(function(){
