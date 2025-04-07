@@ -297,6 +297,7 @@ if (!(isset($_POST['import']) && $_POST['import'] != '')) {
           p.products_tax_class_id     as v_tax_class_id,
           p.products_quantity       as v_products_quantity,
           p.products_status       as v_products_status,
+          p.products_status       as v_status,
           p.manufacturers_id        as v_manufacturers_id,
           p.metatags_products_name_status as v_metatags_products_name_status,
           p.metatags_title_status     as v_metatags_title_status,
