@@ -238,7 +238,7 @@ if (!function_exists('zen_define_default')) {
     require $old_langfile;
   }
 
-  $curver_detail = '4.0.38.ZC';
+  $curver_detail = '4.0.39.ZC';
   if (file_exists(DIR_WS_MODULES . 'easypopulate_4_version.php')) {
     require DIR_WS_MODULES . 'easypopulate_4_version.php';
   }
