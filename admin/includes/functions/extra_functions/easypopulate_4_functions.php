@@ -1351,3 +1351,16 @@ function ep4_draw_cat_list($current_cat_id, $withAttribs = true, $withProd = tru
     }
     return '';
 }
+
+
+function ep4_get_product_type_handle($str_handle) {
+  global $db;
+// This function will change the text handle to a numeric one for insert.
+// Will return 1 by default if it fails to find the type handler
+
+  $sql = "SELECT type_id FROM " . TABLE_PRODUCT_TYPES . " WHERE type_handler = :type_handler:";
+  $sql = $db->bindVars($sql, ':type_handler:', $str_handle , 'string');
+  $handler = $db->Execute($sql);
+
+return $handler->fields['type_id'] ?? 1;
+}

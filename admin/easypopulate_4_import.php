@@ -1150,9 +1150,9 @@ if (!(isset($_POST['import']) && $_POST['import'] != '')) {
             }
             if (!isset($filelayout['v_products_type'])) {
               if ($v_artists_name <> '') {
-                $v_products_type = 2; // 2 = music Product - Music
+                $v_products_type = 'product_music'; // Change products_type to handler instead of numbers -- retched
               } elseif (empty($v_products_type) && $product_is_new) {
-                $v_products_type = 1; // 1 = standard product @TODO Allow import of alternate product type
+                $v_products_type = 'product'; // Change products_type to handler instead of numbers -- retched
               }
             }
 
@@ -1231,7 +1231,7 @@ if (!(isset($_POST['import']) && $_POST['import'] != '')) {
               metatags_price_status     = :metatags_price_status:,
               metatags_title_tagline_status = :metatags_title_tagline_status:";
             $query = $db->bindVars($query, ':products_model:', $v_products_model , $zc_support_ignore_null);
-            $query = $db->bindVars($query, ':products_type:', $v_products_type , 'integer');
+            $query = $db->bindVars($query, ':products_type:', ep4_get_product_type_handle($v_products_type) , 'integer'); // Change products_type to handler instead of numbers -- retched
             $query = $db->bindVars($query, ':products_price:', $v_products_price , 'currency');
             $query = $db->bindVars($query, ':products_price_uom:', (isset($v_products_price_uom) ? $v_products_price_uom : '0.00') , 'currency');
             $query = $db->bindVars($query, ':products_id:', $v_products_id, 'integer');
@@ -1284,7 +1284,7 @@ if (!(isset($_POST['import']) && $_POST['import'] != '')) {
             }
             $ep_import_count++;
             // PRODUCT_MUSIC_EXTRA
-            if ($v_products_type == '2') {
+            if ($v_products_type == 'product_music') { // Change products_type to handler instead of numbers -- retched
               $sql_music_extra = "SELECT * FROM " . TABLE_PRODUCT_MUSIC_EXTRA . " WHERE (products_id = :products_id:) LIMIT 1";
               $sql_music_extra = $db->bindVars($sql_music_extra, ':products_id:', $v_products_id, 'integer');
               $sql_music_extra = ep_4_query($sql_music_extra);
@@ -1449,7 +1449,7 @@ if (!(isset($_POST['import']) && $_POST['import'] != '')) {
                 unset($summary);
               }
               // PRODUCT_MUSIC_EXTRA
-              if ($v_products_type == '2') {
+              if ($v_products_type == 'product_music') { // Change products_type to handler instead of numbers -- retched
                 $sql_music_extra = ep_4_query("SELECT * FROM " . TABLE_PRODUCT_MUSIC_EXTRA . " WHERE (products_id = " . (int)$v_products_id . ") LIMIT 1");
                 if ($ep_4_num_rows($sql_music_extra) == 1) { // update
                   $query = "UPDATE " . TABLE_PRODUCT_MUSIC_EXTRA . " SET

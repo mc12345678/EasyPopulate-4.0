@@ -294,11 +294,12 @@ if (!defined('EASYPOPULATE_4_CONFIG_LANGUAGE_EXPORT')) {
       unset($l_id_code);
       $filelayout[] = 'v_music_genre_name';
     }
+    // Change products_type to handler instead of numbers -- retched
     $filelayout_sql = 'SELECT DISTINCT
 
-      p.products_id         as v_products_id,
+      p.products_id           as v_products_id,
       p.products_model        as v_products_model,
-      p.products_type         as v_products_type,
+      pt.type_handler         as v_products_type,
       p.products_image        as v_products_image,
       p.products_price        as v_products_price,';
     if ($ep_supported_mods['uom'] == true) { // price UOM mod
@@ -369,6 +370,10 @@ if (!defined('EASYPOPULATE_4_CONFIG_LANGUAGE_EXPORT')) {
       LEFT JOIN ' . TABLE_MANUFACTURERS_INFO .' AS mi
         ON (
           p.manufacturers_id = mi.manufacturers_id
+        )
+      LEFT JOIN ' . TABLE_PRODUCT_TYPES . ' AS pt
+        ON (
+          pt.type_id = p.products_type
         )
       ';
       
